@@ -8,7 +8,7 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
     // Thực hiện xác thực người dùng dựa trên username và password ở đây
     // Ví dụ: truy vấn database để kiểm tra người dùng
-    User.findOne({ username: username }, function(err, user) {
+    User.findOne({ username: username, status: 1 }, function(err, user) {
       if (err) { return done(err); }
       if (!user) { return done(null, false); }
 

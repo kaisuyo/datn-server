@@ -8,69 +8,48 @@ const Course = require('../models/Course');
 const Subject = require('../models/Subject');
 const Question = require('./Question');
 const Answer = require('./Answer');
+const RegisCourse = require('./RegistCourse');
+const WaitData = require("../models/WaitData");
+const Notic = require('../models/Notic');
 
-User.hasMany(SeenVideo, {
-	foreignKey: 'userId',
-})
-SeenVideo.belongsTo(User, {
-	foreignKey: 'userId',
-})
+User.hasMany(SeenVideo, {foreignKey: 'userId'})
+SeenVideo.belongsTo(User, {foreignKey: 'userId'})
 
-User.hasMany(Tested, {
-  foreignKey: 'userId',
-})
-Tested.belongsTo(User, {
-  foreignKey: 'userId'
-})
+User.hasMany(Tested, {foreignKey: 'userId'})
+Tested.belongsTo(User, {foreignKey: 'userId'})
 
-Video.hasMany(SeenVideo, {
-  foreignKey: 'videoId',
-})
-SeenVideo.belongsTo(Video, {
-  foreignKey: 'videoId',
-})
+Video.hasMany(SeenVideo, {foreignKey: 'videoId'})
+SeenVideo.belongsTo(Video, {foreignKey: 'videoId'})
 
-Test.hasMany(Tested, {
-  foreignKey: 'testId',
-})
-Tested.belongsTo(Test, {
-  foreignKey: 'testId',
-})
+Test.hasMany(Tested, {foreignKey: 'testId'})
+Tested.belongsTo(Test, {foreignKey: 'testId'})
 
-Course.hasMany(Video, {
-  foreignKey: 'courseId',
-})
-Video.belongsTo(Course, {
-  foreignKey: 'courseId',
-})
+Course.hasMany(Video, {foreignKey: 'courseId'})
+Video.belongsTo(Course, {foreignKey: 'courseId'})
 
-Course.hasMany(Test, {
-	foreignKey: 'courseId',
-})
-Test.belongsTo(Course, {
-	foreignKey: 'courseId',
-})
+Course.hasMany(Test, {foreignKey: 'courseId'})
+Test.belongsTo(Course, {foreignKey: 'courseId'})
 
-Subject.hasMany(Course, {
-	foreignKey: 'subjectId',
-})
-Course.belongsTo(Subject, {
-	foreignKey: 'subjectId',
-})
+Subject.hasMany(Course, {foreignKey: 'subjectId'})
+Course.belongsTo(Subject, {foreignKey: 'subjectId'})
 
-Test.hasMany(Question, {
-  foreignKey: 'testId'
-})
-Question.belongsTo(Test, {
-  foreignKey: 'testId'
-})
+Test.hasMany(Question, {foreignKey: 'testId'})
+Question.belongsTo(Test, {foreignKey: 'testId'})
 
-Question.hasMany(Answer, {
-  foreignKey: 'questionId'
-})
-Answer.belongsTo(Question, {
-  foreignKey: 'questionId'
-})
+Question.hasMany(Answer, {foreignKey: 'questionId'})
+Answer.belongsTo(Question, {foreignKey: 'questionId'})
+
+User.hasMany(RegisCourse, {foreignKey: 'userId'})
+RegisCourse.belongsTo(User, {foreignKey: 'userId'})
+
+Course.hasMany(RegisCourse, {foreignKey: 'courseId'})
+RegisCourse.belongsTo(Course, {foreignKey: 'courseId'})
+
+User.hasMany(WaitData, {foreignKey: 'userId'})
+WaitData.belongsTo(User, {foreignKey: 'userId'})
+
+User.hasMany(Notic, {foreignKey: 'userId'})
+Notic.belongsTo(User, {foreignKey: 'userId'})
 
 module.exports = {
   User, 
@@ -82,5 +61,8 @@ module.exports = {
   Course,
   Subject,
   Question,
-  Answer
+  Answer,
+  RegisCourse,
+  Notic,
+  WaitData
 }
