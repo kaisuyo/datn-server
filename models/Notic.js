@@ -14,6 +14,7 @@ const Notic = sequelize.define('notics', {
 		field: 'user_id',
 	},
 	message: Sequelize.STRING,
+	// 0 -> chưa đọc,  -> đã đọc
   status: Sequelize.INTEGER
 }, {
 	timestamps: false
