@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 
-const sequelize = require('../services/services')
+const sequelize = require('../services/connect')
 
 const Question = sequelize.define('courses', {
 	questionId: {
@@ -15,7 +15,23 @@ const Question = sequelize.define('courses', {
 	},
 	title: Sequelize.STRING,
 	description: Sequelize.STRING,
-  answer: Sequelize.STRING
+  answer: Sequelize.STRING,
+  optionA: {
+		type: Sequelize.STRING,
+		field: 'option_a'
+	},
+  optionB: {
+		type: Sequelize.STRING,
+		field: 'option_b'
+	},
+  optionC: {
+		type: Sequelize.STRING,
+		field: 'option_c'
+	},
+  optionD: {
+		type: Sequelize.STRING,
+		field: 'option_d'
+	},
 }, {
 	timestamps: false
 })

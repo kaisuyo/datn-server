@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 
-const sequelize = require('../services/services')
+const sequelize = require('../services/connect')
 
 const Tested = sequelize.define('testeds', {
   testId: {
@@ -15,7 +15,8 @@ const Tested = sequelize.define('testeds', {
   },
   score: Sequelize.INTEGER,
   time: Sequelize.INTEGER,
-  rate: Sequelize.FLOAT
+  rate: Sequelize.FLOAT,
+  fraq: Sequelize.INTEGER
 }, {
   timestamps: false
 })

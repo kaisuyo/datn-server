@@ -57,7 +57,6 @@ module.exports = {
   SeenVideo,
   Test,
   Tested,
-  Topic,
   Course,
   Subject,
   Question,

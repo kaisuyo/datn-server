@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { Course, RegisCourse, RegisCourse, WaitData, Notic} = require('../models/index')
+const { Course, RegisCourse, WaitData, Notic} = require('../models/index')
 const { checkAdmin, checkAuth } = require('./middlewave')
 
 router.get('/all', async (req, res) => {

@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 
-const sequelize = require('../services/services')
+const sequelize = require('../services/connect')
 
 const RegisCourse = sequelize.define('regis_courses', {
 	userId: {

@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 
-const sequelize = require('../services/services')
+const sequelize = require('../services/connect')
 
 const SeenVideo = sequelize.define('seen_videos', {
 	userId: {
