@@ -3,7 +3,7 @@ var router = express.Router();
 const passport = require('../services/auth')
 const { User, WaitData } = require('../models/index')
 const { bcrypt, saltRounds } = require('../services/bcrypt');
-const { checkAdmin, checkSuperAdmin } = require('./middlewave');
+const { checkSuperAdmin } = require('./middlewave');
 
 router.post("/login", passport.authenticate('local'), (req, res) => {
   res.json({value: req.user})
@@ -71,6 +71,16 @@ router.get('/all', checkSuperAdmin, async (req, res) => {
     res.json({value: users})
   } catch (e) {
     console.error(e)
+    res.json({message: "Có lỗi trong quá trình xử lý"})
+  }
+})
+
+router.get('/block:userId', checkSuperAdmin, async (req, res) => {
+  try {
+    const blockUserId = req.params.userId
+    await User.update({status: 0}, {where: {userId: blockUserId}})
+    res.json({value: true})
+  } catch (e) {
     res.json({message: "Có lỗi trong quá trình xử lý"})
   }
 })

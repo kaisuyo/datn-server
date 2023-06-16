@@ -47,7 +47,36 @@ router.post("/acceptRegis", checkAdmin, async (req, res) => {
     await Notic.create({userId, message: "Bạn đã đăng ký khóa học thành công", status: 0})
     res.json({value: true})
   } else {
-    res.json({value: false})
+    res.json({message: "CÓ lỗi trong quá trình xử lý"})
+  }
+})
+
+router.post('/create', checkAdmin, async (req, res) => {
+  const { title, description, subjectId } = req.body
+  try {
+    const newCourse = await Course.create({title, description, subjectId})
+    res.json({value: newCourse})
+  } catch(e) {
+    res.json({message: "CÓ lỗi trong quá trình xử lý"})
+  }
+})
+
+router.post('update', checkAdmin, async (req, res) => {
+  const { title, description, subjectId } = req.body
+  try {
+    const newCourse = await Course.update({title, description}, {where: {subjectId}})
+    res.json({value: newCourse})
+  } catch(e) {
+    res.json({message: "CÓ lỗi trong quá trình xử lý"})
+  } 
+})
+
+router.get('/delete/:courseId', checkAdmin, async (req, res) => {
+  try {
+    await Course.destroy({where: {courseId: req.params.courseId}})
+    res.json({value: true})
+  } catch (e) {
+    res.json({message: "CÓ lỗi trong quá trình xử lý"})
   }
 })
 

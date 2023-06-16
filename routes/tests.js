@@ -22,9 +22,9 @@ router.get("/all", checkAuth, async (req, res) => {
 
 router.get('/:testId', checkAuth, async (req, res) => {
   try {
-    const test = await Test.findOne({include: Course}, {where: {testId: req.params.testId}})
+    const test = await Test.findOne({where: {testId: req.params.testId}})
     if (test) {
-      const regis = await RegisCourse.findOne({where: {userId: req.user.userId, courseId: test.course.courseId}})
+      const regis = await RegisCourse.findOne({where: {userId: req.user.userId, courseId: test.courseId}})
       if (regis) {
         res.json({value: test})
       } else {
