@@ -14,7 +14,7 @@ const User = sequelize.define('users', {
 		field: 'user_name'
 	},
   password: Sequelize.STRING,
-	/// 0 -> user, 1 -> admin
+	/// 0 -> user, 1 -> admin, 2 -> system admin
 	role: Sequelize.INTEGER,
 	// 0 -> không đăng nhập được, 1 -> có thể đăng nhập
 	status: Sequelize.INTEGER

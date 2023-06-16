@@ -1,4 +1,4 @@
-const checkAuth = async (req, res, next) => {
+const checkAuth = (req, res, next) => {
   if (req.isAuthenticated()) {
     next()
   } else {
@@ -6,7 +6,7 @@ const checkAuth = async (req, res, next) => {
   }
 }
 
-const checkAdmin = async (req, res, next) => {
+const checkAdmin = (req, res, next) => {
   if (req.isAuthenticated() && req.user.role == 1) {
     next()
   } else {
@@ -14,7 +14,16 @@ const checkAdmin = async (req, res, next) => {
   }
 }
 
+const checkSuperAdmin = (req, res, next) => {
+  if (req.isAuthenticated() && req.user.role == 2) {
+    next()
+  } else {
+    res.json({message: "Bạn không phải người quản trị hệ thống"})
+  }
+}
+
 module.exports = {
   checkAuth,
-  checkAdmin
+  checkAdmin,
+  checkSuperAdmin
 }
