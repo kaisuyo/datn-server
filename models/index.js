@@ -7,7 +7,6 @@ const Tested = require('../models/Tested');
 const Course = require('../models/Course');
 const Subject = require('../models/Subject');
 const Question = require('./Question');
-const Answer = require('./Answer');
 const RegisCourse = require('./RegistCourse');
 const WaitData = require("../models/WaitData");
 const Notic = require('../models/Notic');
@@ -36,9 +35,6 @@ Course.belongsTo(Subject, {foreignKey: 'subjectId'})
 Test.hasMany(Question, {foreignKey: 'testId'})
 Question.belongsTo(Test, {foreignKey: 'testId'})
 
-Question.hasMany(Answer, {foreignKey: 'questionId'})
-Answer.belongsTo(Question, {foreignKey: 'questionId'})
-
 User.hasMany(RegisCourse, {foreignKey: 'userId'})
 RegisCourse.belongsTo(User, {foreignKey: 'userId'})
 
@@ -60,7 +56,6 @@ module.exports = {
   Course,
   Subject,
   Question,
-  Answer,
   RegisCourse,
   Notic,
   WaitData

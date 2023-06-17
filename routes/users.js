@@ -5,19 +5,32 @@ const { User, WaitData } = require('../models/index')
 const { bcrypt, saltRounds } = require('../services/bcrypt');
 const { checkSuperAdmin } = require('./middlewave');
 
-router.post("/login", passport.authenticate('local'), (req, res) => {
-  res.json({value: req.user})
+router.get("/", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({value: req.user})
+  } else {
+    res.json({})
+  }
 })
 
-router.post("/register", async (req, res) => {
+router.post("/login", passport.authenticate('local'), (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({value: req.user})
+  } else {
+    res.json({message: "Đăng nhập thất bại"})
+  }
+})
+
+router.post("/signUp", async (req, res) => {
+  const { username, password } = req.body
   try {
-    const newUser = await User.findOne({where: {username: req.body.username}})
+    const newUser = await User.findOne({where: {username}})
     if (newUser) {
       res.json({value: null, message: "Người dùng đã tồn tại"})
     } else {
-      const hashPass = bcrypt.hashSync(req.body.password, saltRounds)
+      const hashPass = bcrypt.hashSync(password, saltRounds)
       await User.create({username, password: hashPass, status: 1})
-      res.redirect('/login')
+      res.redirect(307, '/users/login')
     }
   } catch(e) {
     console.error(e)
@@ -25,44 +38,11 @@ router.post("/register", async (req, res) => {
   }
 })
 
-router.get('/logout', (req, res) => {
-  req.logout();
-  res.json({value: null})
-})
-
-router.post('/registerAdmin', async (req, res) => {
-  try {
-    const newAdmin = await User.findOne({where: {username: req.body.username}})
-    if (newAdmin) {
-      res.json({value: false})
-    } else {
-      const hashPass = bcrypt.hashSync(req.body.password, saltRounds)
-      const admin = await User.create({username, password: hashPass, status: 0})
-      // waitType  = 0 -> đăng ký admin, = 1 -> đăng ký khóa học
-      await WaitData.create({userId: admin.userId, waitType: 0})
-      res.json({value: true})
-    }
-  } catch (e) {
-    console.error(e)
-    res.json({value: null, message: "Có lỗi trong quá trình đăng ký"})
-  }
-})
-
-router.get('/acceptAdmin:userId', checkSuperAdmin, async (req, res) => {
-  const { userId } = req.params
-  try {
-    const adminWait = await WaitData.findOne({where: {userId, waitType: 0}})
-    await User.update({status: 1}, {where: {userId}})
-    if (adminWait) {
-      await WaitData.destroy({where: {userId: newAdmin.userId, waitType: 0}})
-    }
-
-    res.json({value: true, message: "Chấp nhận thành công"})
-    
-  } catch (e) {
-    console.error(e)
-    res.json({message: "Có lỗi trong quá trình xử lý"})
-  }
+router.get('/logout', (req, res, next) => {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.json({})
+  });
 })
 
 router.get('/all', checkSuperAdmin, async (req, res) => {
@@ -71,6 +51,33 @@ router.get('/all', checkSuperAdmin, async (req, res) => {
     res.json({value: users})
   } catch (e) {
     console.error(e)
+    res.json({message: "Có lỗi trong quá trình xử lý"})
+  }
+})
+
+router.post('/createAdmin', checkSuperAdmin, async (req, res) => {
+  const { username, password } = req.body
+  try {
+    const oldAdmin = await User.findOne({where: {username}})
+    if (oldAdmin) {
+      res.json({message: "Tên người dùng đã tồn tại"})
+    } else {
+      const hashPass = bcrypt.hashSync(password, saltRounds)
+      await User.create({username, password: hashPass, role: 1})
+    }
+    res.json({value: users})
+  } catch (e) {
+    console.error(e)
+    res.json({message: "Có lỗi trong quá trình xử lý"})
+  }
+})
+
+router.get('/info/:userId', checkSuperAdmin, async (req, res) => {
+  try {
+    const userId = req.params.userId
+    const user = await User.update({where: {userId}})
+    res.json({value: user})
+  } catch (e) {
     res.json({message: "Có lỗi trong quá trình xử lý"})
   }
 })
@@ -84,5 +91,6 @@ router.get('/block:userId', checkSuperAdmin, async (req, res) => {
     res.json({message: "Có lỗi trong quá trình xử lý"})
   }
 })
+
 
 module.exports = router;

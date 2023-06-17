@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
 const passport = require('./services/auth');
+const cors = require('cors')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -33,6 +34,11 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+
+app.use(cors({
+  origin: ["http://localhost:3000", ""],
+  credentials: true
+}))
 
 // Thiết lập passport
 app.use(passport.initialize());
