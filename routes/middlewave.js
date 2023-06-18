@@ -1,3 +1,5 @@
+const { ROLE } = require("../services/enum")
+
 const checkAuth = (req, res, next) => {
   if (req.isAuthenticated()) {
     next()
@@ -6,8 +8,24 @@ const checkAuth = (req, res, next) => {
   }
 }
 
+const checkUser = (req, res, next) => {
+  if (req.isAuthenticated() && req.user.role == ROLE.USER) {
+    next()
+  } else {
+    res.json({value: null, message: "Bạn không có quyền"})
+  }
+}
+
+const checkSuperUser = (req, res, next) => {
+  if (req.isAuthenticated() && req.user.role == ROLE.SUPER_USER) {
+    next()
+  } else {
+    res.json({value: null, message: "Bạn không có quyền tạo khóa học"})
+  }
+}
+
 const checkAdmin = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.role == 1) {
+  if (req.isAuthenticated() && req.user.role == ROLE.ADMIN) {
     next()
   } else {
     res.json({value: null, message: "Bạn không có quyền"})
@@ -15,7 +33,7 @@ const checkAdmin = (req, res, next) => {
 }
 
 const checkSuperAdmin = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.role == 2) {
+  if (req.isAuthenticated() && req.user.role == ROLE.SYSTEM_USER) {
     next()
   } else {
     res.json({message: "Bạn không phải người quản trị hệ thống"})
@@ -24,6 +42,8 @@ const checkSuperAdmin = (req, res, next) => {
 
 module.exports = {
   checkAuth,
+  checkUser,
+  checkSuperUser,
   checkAdmin,
   checkSuperAdmin
 }

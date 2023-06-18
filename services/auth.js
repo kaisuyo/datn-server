@@ -15,7 +15,7 @@ passport.use(new LocalStrategy(
       if (!verifyPassword) { return done(null, false); }
       return done(null, user);
     }).catch(e => {
-      return done(err)
+      return done(e)
     })
   }
 ));

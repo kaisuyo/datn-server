@@ -10,7 +10,10 @@ const Subject = sequelize.define('subjects', {
     autoIncrement: true,
 	},
 	title: Sequelize.STRING,
-	description: Sequelize.STRING,
+	description: {
+		type: Sequelize.STRING,
+		defaultValue: ''
+	}
 }, {
 	timestamps: false
 })

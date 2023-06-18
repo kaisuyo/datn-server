@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { Course, RegisCourse, WaitData, Notic} = require('../models/index')
-const { checkAdmin, checkAuth } = require('./middlewave')
+const { checkAdmin, checkAuth, checkSuperUser } = require('./middlewave')
 
 router.get('/all', async (req, res) => {
   try {
@@ -38,7 +38,7 @@ router.post('/register', checkAuth, async (req, res) => {
   }
 })
 
-router.post("/acceptRegis", checkAdmin, async (req, res) => {
+router.post("/acceptRegis", checkSuperUser, async (req, res) => {
   const { userId, courseId } = req.body
   const acceptRegis = await WaitData.findOne({where: {userId, waitType: 1, waitDataDest: courseId}})
   if (acceptRegis) {
@@ -51,7 +51,7 @@ router.post("/acceptRegis", checkAdmin, async (req, res) => {
   }
 })
 
-router.post('/create', checkAdmin, async (req, res) => {
+router.post('/create', checkSuperUser, async (req, res) => {
   const { title, description, subjectId } = req.body
   try {
     const newCourse = await Course.create({title, description, subjectId})
@@ -61,7 +61,7 @@ router.post('/create', checkAdmin, async (req, res) => {
   }
 })
 
-router.post('update', checkAdmin, async (req, res) => {
+router.post('update', checkSuperUser, async (req, res) => {
   const { title, description, subjectId } = req.body
   try {
     const newCourse = await Course.update({title, description}, {where: {subjectId}})

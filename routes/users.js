@@ -3,7 +3,8 @@ var router = express.Router();
 const passport = require('../services/auth')
 const { User, WaitData } = require('../models/index')
 const { bcrypt, saltRounds } = require('../services/bcrypt');
-const { checkSuperAdmin } = require('./middlewave');
+const { checkSuperAdmin, checkAuth } = require('./middlewave');
+const { ROLE } = require('../services/enum');
 
 router.get("/", (req, res) => {
   if (req.isAuthenticated()) {
@@ -45,6 +46,24 @@ router.get('/logout', (req, res, next) => {
   });
 })
 
+router.post('/changePass', checkAuth, async (req, res) => {
+  const { newPassword, oldPassword } = req.body
+  try {
+    const user = await User.findOne({where: {userId: req.user.userId}})
+    const verifyPass = bcrypt.compareSync(oldPassword, user.password)
+    if (verifyPass) {
+      const hashPass = bcrypt.hashSync(newPassword, saltRounds)
+      await User.update({password: hashPass}, {where: {userId: req.user.userId}})
+      res.json({value: true, message: "Thay đổi mật khẩu thành công"})
+    } else {
+      res.json({message: "Mật khẩu cũ không chính xác"})
+    }
+  } catch(e) {
+    console.error(e)
+    res.json({message: "Có lỗi trong quá trình xử lý"})
+  }
+})
+
 router.get('/all', checkSuperAdmin, async (req, res) => {
   try {
     const users = await User.findAll({where: {userId: {[sequelize.Op.not]: req.user.userId}}})
@@ -55,17 +74,51 @@ router.get('/all', checkSuperAdmin, async (req, res) => {
   }
 })
 
-router.post('/createAdmin', checkSuperAdmin, async (req, res) => {
-  const { username, password } = req.body
+router.get('/:roleType', checkSuperAdmin, async (req, res) => {
+  try {
+    const users = await User.findAll({where: {role: req.params.roleType}})
+    res.json({value: users})
+  } catch (e) {
+    console.error(e)
+    res.json({message: "Có lỗi trong quá trình xử lý"})
+  }
+})
+
+router.post('/create', checkSuperAdmin, async (req, res) => {
+  const { username, password, roleType } = req.body
   try {
     const oldAdmin = await User.findOne({where: {username}})
     if (oldAdmin) {
       res.json({message: "Tên người dùng đã tồn tại"})
     } else {
       const hashPass = bcrypt.hashSync(password, saltRounds)
-      await User.create({username, password: hashPass, role: 1})
+      const user = await User.create({username, password: hashPass, role: roleType})
+      res.json({value: user})
     }
-    res.json({value: users})
+  } catch (e) {
+    console.error(e)
+    res.json({message: "Có lỗi trong quá trình xử lý"})
+  }
+})
+
+router.post('/delete', checkSuperAdmin, async (req, res) => {
+  const { userId } = req.body
+  try {
+    await User.destroy({where: {userId}})
+    res.json({value: true})
+  } catch (e) {
+    console.error(e)
+    res.json({message: "Có lỗi trong quá trình xử lý"})
+  }
+})
+
+router.post('/resetPass', checkSuperAdmin, async (req, res) => {
+  const { userId } = req.body
+  try {
+    const newPass = '0'
+    const hashPass = bcrypt.hashSync(newPass, saltRounds)
+    await User.update({password: hashPass}, {where: {userId}})
+    res.json({value: true, message: "Đổi mật khẩu thành công"})
   } catch (e) {
     console.error(e)
     res.json({message: "Có lỗi trong quá trình xử lý"})
@@ -82,15 +135,24 @@ router.get('/info/:userId', checkSuperAdmin, async (req, res) => {
   }
 })
 
-router.get('/block:userId', checkSuperAdmin, async (req, res) => {
+router.post('/block', checkSuperAdmin, async (req, res) => {
+  const { userId } = req.body
   try {
-    const blockUserId = req.params.userId
-    await User.update({status: 0}, {where: {userId: blockUserId}})
+    await User.update({status: 0}, {where: {userId}})
     res.json({value: true})
   } catch (e) {
     res.json({message: "Có lỗi trong quá trình xử lý"})
   }
 })
 
+router.post('/unblock', checkSuperAdmin, async (req, res) => {
+  const { userId } = req.body
+  try {
+    await User.update({status: 1}, {where: {userId}})
+    res.json({value: true})
+  } catch (e) {
+    res.json({message: "Có lỗi trong quá trình xử lý"})
+  }
+})
 
 module.exports = router;
