@@ -5,4 +5,11 @@ const ROLE = {
   SYSTEM_USER: 3,
 }
 
+const REGIS_TYPE = {
+  // 0-> đăng ký khóa học
+  REGIS: 0,
+  // 1 -> Cung cấp khóa học
+  HAS: 1
+}
+
 module.exports = { ROLE }

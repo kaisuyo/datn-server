@@ -14,13 +14,32 @@ router.get('/all', async (req, res) => {
 })
 
 router.post('/self', checkAuth, async (req, res) => {
+  const { regisType } = req.body
   try {
     const regisCourses = await RegisCourse.findAll(
-      {where: {userId: req.user.userId}},
+      {where: {userId: req.user.userId, regisType}},
       {include: Course}
     )
   
     res.json({value: regisCourses})
+  } catch(e) {
+    console.error(e)
+    res.json({message: "Có lỗi khi truy xuất dữ liệu"})
+  }
+})
+
+router.get("/get/:courseId", checkAuth, async (req, res) => {
+  try {
+    const regisCourses = await RegisCourse.findOne(
+      {where: {userId: req.user.userId, courseId: req.params.courseId}},
+      {include: Course}
+    )
+    
+    if (regisCourses) {
+      res.json({value: regisCourses.course})
+    } else {
+      res.json({message: "Bạn không thể lấy được thông tin khóa học này"})
+    }
   } catch(e) {
     console.error(e)
     res.json({message: "Có lỗi khi truy xuất dữ liệu"})

@@ -10,8 +10,12 @@ const RegisCourse = sequelize.define('regis_courses', {
 	},
 	courseId: {
 		type: Sequelize.INTEGER,
-    primaryKey: true,
+    	primaryKey: true,
 		field: 'course_id'
+	},
+	regisType: {
+		type: Sequelize.INTEGER,
+		field: 'regis_type'
 	}
 }, {
 	timestamps: false
