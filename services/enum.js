@@ -12,4 +12,9 @@ const REGIS_TYPE = {
   HAS: 1
 }
 
-module.exports = { ROLE }
+const WAIT_TYPE = {
+  UPLOAD: 0,
+  REGIS: 1
+}
+
+module.exports = { ROLE, REGIS_TYPE, WAIT_TYPE }

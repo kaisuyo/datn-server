@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const { Course, RegisCourse, WaitData, Notic} = require('../models/index')
+const { Course, RegisCourse, WaitData, Notic, Video, Test} = require('../models/index');
+const { WAIT_TYPE, REGIS_TYPE } = require('../services/enum');
 const { checkAdmin, checkAuth, checkSuperUser } = require('./middlewave')
 
 router.get('/all', async (req, res) => {
@@ -16,12 +17,12 @@ router.get('/all', async (req, res) => {
 router.post('/self', checkAuth, async (req, res) => {
   const { regisType } = req.body
   try {
-    const regisCourses = await RegisCourse.findAll(
-      {where: {userId: req.user.userId, regisType}},
-      {include: Course}
-    )
+    const regisCourses = await RegisCourse.findAll({
+      where: {userId: req.user.userId, regisType},
+      include: Course
+    })
   
-    res.json({value: regisCourses})
+    res.json({value: regisCourses.map(r => r.courses)})
   } catch(e) {
     console.error(e)
     res.json({message: "Có lỗi khi truy xuất dữ liệu"})
@@ -30,13 +31,15 @@ router.post('/self', checkAuth, async (req, res) => {
 
 router.get("/get/:courseId", checkAuth, async (req, res) => {
   try {
-    const regisCourses = await RegisCourse.findOne(
-      {where: {userId: req.user.userId, courseId: req.params.courseId}},
-      {include: Course}
-    )
+    const regisCourse = await RegisCourse.findOne({where: {userId: req.user.userId, courseId: req.params.courseId}})
+
+    const course = await Course.findOne({
+      where: {courseId: regisCourse.courseId}, 
+      include: [Video, Test]
+    })
     
-    if (regisCourses) {
-      res.json({value: regisCourses.course})
+    if (regisCourse && course) {
+      res.json({value: course})
     } else {
       res.json({message: "Bạn không thể lấy được thông tin khóa học này"})
     }
@@ -74,28 +77,37 @@ router.post('/create', checkSuperUser, async (req, res) => {
   const { title, description, subjectId } = req.body
   try {
     const newCourse = await Course.create({title, description, subjectId})
+    await WaitData.create({userId: req.user.userId, waitType: WAIT_TYPE.UPLOAD, waitDataDest: newCourse.courseId})
+    await RegisCourse.create({userId: req.user.userId, courseId: newCourse.courseId, regisType: REGIS_TYPE.HAS})
     res.json({value: newCourse})
   } catch(e) {
-    res.json({message: "CÓ lỗi trong quá trình xử lý"})
+    console.error(e)
+    res.json({message: "Có lỗi trong quá trình xử lý"})
   }
 })
 
-router.post('update', checkSuperUser, async (req, res) => {
-  const { title, description, subjectId } = req.body
+router.post('/update', checkSuperUser, async (req, res) => {
   try {
-    const newCourse = await Course.update({title, description}, {where: {subjectId}})
-    res.json({value: newCourse})
+    const { title, description, courseId } = req.body
+    const regis = RegisCourse.findOne({where: {courseId, userId: req.user.userId}})
+    
+    if (regis) {
+      const newCourse = await Course.update({title, description}, {where: {courseId}})
+      res.json({value: newCourse, message: "Chỉnh sửa thông tin khóa học thành công"})
+    } else {
+      res.json({message: "Bạn không thể chỉnh sửa thông tin khóa học này"})
+    }
   } catch(e) {
-    res.json({message: "CÓ lỗi trong quá trình xử lý"})
+    res.json({message: "Có lỗi trong quá trình xử lý"})
   } 
 })
 
-router.get('/delete/:courseId', checkAdmin, async (req, res) => {
+router.get('/delete/:courseId', checkSuperUser, async (req, res) => {
   try {
     await Course.destroy({where: {courseId: req.params.courseId}})
     res.json({value: true})
   } catch (e) {
-    res.json({message: "CÓ lỗi trong quá trình xử lý"})
+    res.json({message: "Có lỗi trong quá trình xử lý"})
   }
 })
 

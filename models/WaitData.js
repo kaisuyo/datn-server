@@ -14,7 +14,7 @@ const WaitData = sequelize.define('wait_datas', {
 		field: 'user_id',
 	},
 	waitType: {
-    // waitType  = 0 -> đăng ký admin, = 1 -> đăng ký khóa học
+    // waitType  = 0 -> wait upload course, = 1 -> regis course
 		type: Sequelize.INTEGER,
 		field: 'wait_type',
 	},

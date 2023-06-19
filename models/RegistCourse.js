@@ -15,7 +15,8 @@ const RegisCourse = sequelize.define('regis_courses', {
 	},
 	regisType: {
 		type: Sequelize.INTEGER,
-		field: 'regis_type'
+		field: 'regis_type',
+		defaultValue: 0
 	}
 }, {
 	timestamps: false
