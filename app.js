@@ -51,7 +51,7 @@ app.use('/subjects', subjectsRouter);
 app.use('/notics', noticsRouter);
 app.use('/tests', testsRouter);
 app.use('/questions', questionsRouter)
-app.use('./videos', videosRouter);
+app.use('/videos', videosRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

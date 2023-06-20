@@ -2,7 +2,7 @@
 var express = require('express');
 var router = express.Router();
 const { Course, Test, RegisCourse, Question, Tested } = require('../models/index')
-const { checkAdmin, checkAuth } = require('./middlewave')
+const { checkAdmin, checkAuth, checkSuperUser } = require('./middlewave')
 
 router.get("/all", checkAuth, async (req, res) => {
   const { courseId } = req.body
@@ -74,7 +74,7 @@ router.post('/submit', checkAuth, async (req, res) => {
   }
 })
 
-router.post('/create', checkAdmin, async (req, res) => {
+router.post('/create', checkSuperUser, async (req, res) => {
   const { courseId, title, description, estimate } = req.body
   try {
     const newTest = await Test.create({courseId, description, title, estimate})

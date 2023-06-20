@@ -1,8 +1,9 @@
 
 var express = require('express');
 var router = express.Router();
-const { Video, RegisCourse, SeenVideo } = require('../models/index')
-const { checkAdmin, checkAuth } = require('./middlewave')
+const { Video, RegisCourse, SeenVideo } = require('../models/index');
+const { REGIS_TYPE } = require('../services/enum');
+const { checkAdmin, checkAuth, checkSuperUser } = require('./middlewave')
 
 router.get('/all/:courseId', checkAuth, async (req, res) => {
   try {
@@ -16,16 +17,20 @@ router.get('/all/:courseId', checkAuth, async (req, res) => {
 
 router.get('/:videoId', checkAuth , async (req, res) => {
   try {
-    const video = await Video.findOne({videoId: req.params.videoId})
+    const video = await Video.findOne({where: {videoId: req.params.videoId}})
     const regisCourse = await RegisCourse.findOne({where: {userId: req.user.userId, courseId: video.courseId}})
     if (regisCourse) {
-      const seen = await SeenVideo.findOne({where: {videoId: video.videoId}})
-      if (seen) {
-        await SeenVideo.update({fraq: seen.fraq + 1})
+      if (regisCourse.regisType == REGIS_TYPE.HAS) {
+        res.json({value: video})
       } else {
-        await SeenVideo.create({fraq: 0, userId: req.user.userId, videoId: video.videoId})
+        const seen = await SeenVideo.findOne({where: {videoId: video.videoId}})
+        if (seen) {
+          await SeenVideo.update({fraq: seen.fraq + 1}, {where: {videoId: video.videoId}})
+        } else {
+          await SeenVideo.create({fraq: 0, userId: req.user.userId, videoId: video.videoId})
+        }
+        res.json({value: video})
       }
-      res.json({value: video})
     } else {
       res.json({message: "Video bạn yêu cầu không thuộc khóa học của bạn"})
     }
@@ -46,21 +51,21 @@ router.post('/stop', checkAuth, async (req, res) => {
   }
 })
 
-router.post('/create', checkAdmin, async (req, res) => {
+router.post('/create', checkSuperUser, async (req, res) => {
   const { title, description, url, courseId, time } = req.body
   try {
-    await Video.create({title, description, URL: url, time, courseId})
-    res.json({value: true})
+    const newVideo = await Video.create({title, description, URL: url, time, courseId})
+    res.json({value: newVideo})
   } catch (e) {
     console.error(e)
     res.json({message: "Có lỗi trong quá trình xử lý"})
   }
 })
 
-router.post('/update', checkAdmin, async (req, res) => {
-  const { title, description, url, courseId, time, videoId } = req.body
+router.post('/update', checkSuperUser, async (req, res) => {
+  const { url, videoId } = req.body
   try {
-    await Video.update({title, description, URL: url, time, courseId}, {where: {videoId}})
+    await Video.update({URL: url}, {where: {videoId}})
     res.json({value: true})
   } catch (e) {
     console.error(e)
@@ -68,7 +73,7 @@ router.post('/update', checkAdmin, async (req, res) => {
   }
 })
 
-router.get('/delete:videoId', checkAdmin, async (req, res) => {
+router.get('/delete/:videoId', checkSuperUser, async (req, res) => {
   try {
     await Video.destroy({where: {videoId: req.params.videoId}})
     res.json({value: true})

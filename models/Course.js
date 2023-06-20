@@ -17,7 +17,7 @@ const Course = sequelize.define('courses', {
 	description: Sequelize.STRING,
 	status: {
 		type: Sequelize.INTEGER,
-		defaultValue: 0
+		defaultValue: -2
 	}
 }, {
 	timestamps: false

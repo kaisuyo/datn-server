@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { Course, RegisCourse, WaitData, Notic, Video, Test} = require('../models/index');
-const { WAIT_TYPE, REGIS_TYPE } = require('../services/enum');
+const { WAIT_TYPE, REGIS_TYPE, COURSE_STATUS } = require('../services/enum');
 const { checkAdmin, checkAuth, checkSuperUser } = require('./middlewave')
 
 router.get('/all', async (req, res) => {
@@ -22,7 +22,7 @@ router.post('/self', checkAuth, async (req, res) => {
       include: Course
     })
   
-    res.json({value: regisCourses.map(r => r.courses)})
+    res.json({value: regisCourses.map(r => r.course)})
   } catch(e) {
     console.error(e)
     res.json({message: "Có lỗi khi truy xuất dữ liệu"})
@@ -77,7 +77,6 @@ router.post('/create', checkSuperUser, async (req, res) => {
   const { title, description, subjectId } = req.body
   try {
     const newCourse = await Course.create({title, description, subjectId})
-    await WaitData.create({userId: req.user.userId, waitType: WAIT_TYPE.UPLOAD, waitDataDest: newCourse.courseId})
     await RegisCourse.create({userId: req.user.userId, courseId: newCourse.courseId, regisType: REGIS_TYPE.HAS})
     res.json({value: newCourse})
   } catch(e) {
@@ -93,13 +92,24 @@ router.post('/update', checkSuperUser, async (req, res) => {
     
     if (regis) {
       const newCourse = await Course.update({title, description}, {where: {courseId}})
-      res.json({value: newCourse, message: "Chỉnh sửa thông tin khóa học thành công"})
+      res.json({value: courseId, message: "Chỉnh sửa thông tin khóa học thành công"})
     } else {
       res.json({message: "Bạn không thể chỉnh sửa thông tin khóa học này"})
     }
   } catch(e) {
     res.json({message: "Có lỗi trong quá trình xử lý"})
   } 
+})
+
+router.post('/send', checkSuperUser, async (req, res) => {
+  const { courseId } = req.body
+  try {
+    await Course.update({status: COURSE_STATUS.WAIT}, {where: {courseId}})
+    await WaitData.create({userId: req.user.userId, waitType: WAIT_TYPE.UPLOAD, waitDataDest: courseId})
+    res.json({value: true})
+  }catch(e) {
+    res.json({message: "Có lỗi trong quá trình xử lý"})
+  }
 })
 
 router.get('/delete/:courseId', checkSuperUser, async (req, res) => {

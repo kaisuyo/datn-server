@@ -17,4 +17,11 @@ const WAIT_TYPE = {
   REGIS: 1
 }
 
-module.exports = { ROLE, REGIS_TYPE, WAIT_TYPE }
+const COURSE_STATUS = {
+  N0: -2,
+  BLOCK: -1,
+  WAIT: 0,
+  ALOW: 1
+}
+
+module.exports = { ROLE, REGIS_TYPE, WAIT_TYPE, COURSE_STATUS }
