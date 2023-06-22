@@ -85,12 +85,12 @@ router.post('/create', checkSuperUser, async (req, res) => {
   }
 })
 
-router.post('/update', checkAdmin, async (req, res) => {
+router.post('/update', checkSuperUser, async (req, res) => {
   const { testId, title, description } = req.body
   try {
-    const test = Test.findOne({where: testId})
+    const test = Test.findOne({where: {testId}})
     if (test) {
-      Test.update({title, description}, {where: testId})
+      Test.update({title, description}, {where: {testId}})
       res.json({value: test})
     } else {
       res.json({message: "Bài kiểm tra bị lỗi"})
