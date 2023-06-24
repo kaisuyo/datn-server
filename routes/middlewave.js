@@ -20,7 +20,7 @@ const checkSuperUser = (req, res, next) => {
   if (req.isAuthenticated() && req.user.role == ROLE.SUPER_USER) {
     next()
   } else {
-    res.json({value: null, message: "Bạn không có quyền tạo khóa học"})
+    res.json({value: null, message: "Bạn không có quyền"})
   }
 }
 

@@ -101,7 +101,7 @@ router.post('/update', checkSuperUser, async (req, res) => {
   }
 })
 
-router.get("/delete/:testId", checkAdmin, async (req, res) => {
+router.get("/delete/:testId", checkSuperUser, async (req, res) => {
   const testId = req.params.testId
   try {
     await Test.destroy({where: {testId}})

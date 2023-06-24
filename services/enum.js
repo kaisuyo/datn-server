@@ -9,12 +9,15 @@ const REGIS_TYPE = {
   // 0-> đăng ký khóa học
   REGIS: 0,
   // 1 -> Cung cấp khóa học
-  HAS: 1
+  HAS: 1,
+  // 2 -> người duyệt
+  APPROVE: 2
 }
 
 const WAIT_TYPE = {
   UPLOAD: 0,
-  REGIS: 1
+  REGIS: 1,
+  RETURN: 2
 }
 
 const COURSE_STATUS = {
