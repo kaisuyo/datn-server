@@ -13,15 +13,19 @@ const WaitData = sequelize.define('wait_datas', {
 		type: Sequelize.INTEGER,
 		field: 'user_id',
 	},
+	receiverId: {
+		type: Sequelize.INTEGER,
+		field: 'receiver_id',
+	},
 	waitType: {
-    // waitType  = 0 -> wait upload course, = 1 -> regis course
 		type: Sequelize.INTEGER,
 		field: 'wait_type',
 	},
   waitDataDest: {
 		type: Sequelize.INTEGER,
 		field: 'wait_data_dest',
-	}
+	},
+	message: Sequelize.STRING
 }, {
 	timestamps: false
 })

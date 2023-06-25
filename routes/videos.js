@@ -62,6 +62,17 @@ router.post('/create', checkSuperUser, async (req, res) => {
   }
 })
 
+router.post('/updateTime', checkSuperUser, async (req, res) => {
+  const { videoId, time } = req.body
+  try {
+    await Video.update({time}, {where: {videoId}})
+    res.json({})
+  } catch (e) {
+    console.error(e)
+    res.json({})
+  }
+})
+
 router.post('/update', checkSuperUser, async (req, res) => {
   const { url, videoId } = req.body
   try {
@@ -81,5 +92,33 @@ router.get('/delete/:videoId', checkSuperUser, async (req, res) => {
     res.json({message: "Có lỗi trong quá trình xử lý"})
   }
 })
+
+router.post('/seen', checkAuth, async (req, res) => {
+  const { videoId, seenTime } = req.body
+  try {
+    const seen = await SeenVideo.findOne({
+      where: {videoId, userId: req.user.userId},
+      include: Video
+    })
+    if (seen) {
+      console.log(seen)
+      if (seen.time + seenTime >= seen.video.dataValues.time) {
+        const fraq = seen.fraq + 1;
+        const newTime = seen.time + seenTime - seen.video.dataValues.time
+        await SeenVideo.update({time: newTime, fraq}, {where: {videoId, userId: req.user.userId}})
+      } else {
+        await SeenVideo.update({time: seen.time + seenTime}, {where: {videoId, userId: req.user.userId}})
+      }
+    } else {
+      await SeenVideo.create({videoId, userId: req.user.userId, time: seenTime})
+    }
+    res.json({})
+  } catch(e) {
+    console.error(e)
+    res.json({})
+  }
+})
+
+router.post('/')
 
 module.exports = router;

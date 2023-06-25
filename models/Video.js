@@ -15,7 +15,7 @@ const Video = sequelize.define('videos', {
 	},
 	title: Sequelize.STRING,
 	description: Sequelize.STRING,
-	time: Sequelize.INTEGER,
+	time: Sequelize.FLOAT,
   URL: {
     type: Sequelize.STRING,
     field: 'video_link'

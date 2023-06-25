@@ -13,9 +13,18 @@ const SeenVideo = sequelize.define('seen_videos', {
 		field: 'video_id',
     primaryKey: true
 	},
-	fraq: Sequelize.INTEGER,
-	rate: Sequelize.FLOAT,
-	time: Sequelize.INTEGER
+	fraq: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0
+	},
+	rate: {
+		type: Sequelize.FLOAT,
+		defaultValue: 0
+	},
+	time: {
+		type: Sequelize.FLOAT,
+		defaultValue: 0
+	}
 }, {
 	timestamps: false
 })

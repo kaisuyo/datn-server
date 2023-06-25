@@ -7,9 +7,8 @@ const Tested = require('../models/Tested');
 const Course = require('../models/Course');
 const Subject = require('../models/Subject');
 const Question = require('./Question');
-const RegisCourse = require('./RegistCourse');
+const RegisCourse = require('../models/RegisCourse');
 const WaitData = require("../models/WaitData");
-const Notic = require('../models/Notic');
 
 User.hasMany(SeenVideo, {foreignKey: 'userId'})
 SeenVideo.belongsTo(User, {foreignKey: 'userId'})
@@ -44,9 +43,6 @@ RegisCourse.belongsTo(Course, {foreignKey: 'courseId'})
 User.hasMany(WaitData, {foreignKey: 'userId'})
 WaitData.belongsTo(User, {foreignKey: 'userId'})
 
-User.hasMany(Notic, {foreignKey: 'userId'})
-Notic.belongsTo(User, {foreignKey: 'userId'})
-
 module.exports = {
   User, 
   Video,
@@ -57,6 +53,5 @@ module.exports = {
   Subject,
   Question,
   RegisCourse,
-  Notic,
   WaitData
 }

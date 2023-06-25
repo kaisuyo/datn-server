@@ -13,8 +13,8 @@ const Tested = sequelize.define('testeds', {
     field: 'user_id',
     primaryKey: true
   },
-  score: Sequelize.INTEGER,
-  time: Sequelize.INTEGER,
+  score: Sequelize.FLOAT,
+  time: Sequelize.FLOAT,
   rate: Sequelize.FLOAT,
   fraq: Sequelize.INTEGER
 }, {

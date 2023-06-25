@@ -11,7 +11,6 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const coursesRouter = require("./routes/courses");
 const subjectsRouter = require("./routes/subjects");
-const noticsRouter = require('./routes/notics');
 const testsRouter = require('./routes/tests');
 const questionsRouter = require("./routes/questions")
 const videosRouter = require("./routes/videos")
@@ -48,7 +47,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/courses', coursesRouter);
 app.use('/subjects', subjectsRouter);
-app.use('/notics', noticsRouter);
 app.use('/tests', testsRouter);
 app.use('/questions', questionsRouter)
 app.use('/videos', videosRouter);
