@@ -1,4 +1,5 @@
-
+const sequelize = require('../services/connect')
+const { bcrypt, saltRounds } = require('../services/bcrypt')
 const User = require('../models/User');
 const Video = require('../models/Video');
 const SeenVideo = require('../models/SeenVideo');
@@ -42,6 +43,14 @@ RegisCourse.belongsTo(Course, {foreignKey: 'courseId'})
 
 User.hasMany(WaitData, {foreignKey: 'userId'})
 WaitData.belongsTo(User, {foreignKey: 'userId'})
+
+sequelize.authenticate().then(async function(errors) { 
+  if (errors) {
+    console.log("error");
+  } else {
+    
+  }
+});
 
 module.exports = {
   User, 

@@ -41,8 +41,9 @@ router.get('/:testId', checkAuth, async (req, res) => {
 
 router.post('/submit', checkAuth, async (req, res) => {
   const {testId, answers, time, rate} = req.body
+  console.log(testId);
   try {
-    const test = await Test.findOne({include: Question}, {where: {testId}})
+    const test = await Test.findOne({where: {testId}, include: Question})
     if (test) {
       let trueCount = 0, count = 0
       test.questions.forEach(q => {
@@ -55,16 +56,19 @@ router.post('/submit', checkAuth, async (req, res) => {
 
       let score = trueCount/count*100
 
-      const tested = Tested.findOne({where: testId})
+      const tested = await Tested.findOne({where: {testId}})
+      let testedInfo = null;
       if (tested) {
-        await Tested.update({
+        testedInfo = await Tested.update({
           score: (tested.score*tested.fraq + score)/(tested.fraq+1),
           time: tested.time + time,
-          fraq: tested.fraq+1
-        }, {where: {testId}})
+          fraq: tested.fraq+1,
+        }, {where: {testId, userId: req.user.userId}})
       } else {
-        await Tested.create({userId: req.user.userId, score, time, rate, fraq: 1})
+        testedInfo = await Tested.create({testId, userId: req.user.userId, score, time, rate, fraq: 1})
       }
+
+      res.json({value: testedInfo})
     } else {
       res.json({message: "Bài kiểm tra bị lỗi"})
     }
@@ -109,6 +113,16 @@ router.get("/delete/:testId", checkSuperUser, async (req, res) => {
   } catch (e) {
     console.error(e)
     res.json({message: "Có lỗi trong quá trình xử lý"})
+  }
+})
+
+router.get('/tested/maxScore/:testId', checkAuth, async (req, res) => {
+  try {
+    const tested = await Tested.findOne({where: {testId: req.params.testId}})
+    res.json({value: tested})
+  } catch (e) {
+    console.error(e)
+    res.json({message: "Có lỗi khi lấy điểm cao nhất"})
   }
 })
 
