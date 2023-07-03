@@ -14,6 +14,7 @@ const subjectsRouter = require("./routes/subjects");
 const testsRouter = require('./routes/tests');
 const questionsRouter = require("./routes/questions")
 const videosRouter = require("./routes/videos")
+const suggestRouter = require("./routes/suggest")
 
 var app = express();
 
@@ -50,6 +51,7 @@ app.use('/subjects', subjectsRouter);
 app.use('/tests', testsRouter);
 app.use('/questions', questionsRouter)
 app.use('/videos', videosRouter);
+app.use('/suggest', suggestRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

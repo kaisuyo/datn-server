@@ -19,7 +19,11 @@ const Video = sequelize.define('videos', {
   URL: {
     type: Sequelize.STRING,
     field: 'video_link'
-  }
+  },
+	subjectId: {
+		type: Sequelize.INTEGER,
+		field: 'subject_id'
+	}
 }, {
 	timestamps: false
 })

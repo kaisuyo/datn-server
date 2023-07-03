@@ -11,6 +11,9 @@ const Question = require('./Question');
 const RegisCourse = require('../models/RegisCourse');
 const WaitData = require("../models/WaitData");
 
+const funcs = require("../services/calculateLearnResult");
+const LearnResult = require('./LearnResult');
+
 User.hasMany(SeenVideo, {foreignKey: 'userId'})
 SeenVideo.belongsTo(User, {foreignKey: 'userId'})
 
@@ -44,11 +47,65 @@ RegisCourse.belongsTo(Course, {foreignKey: 'courseId'})
 User.hasMany(WaitData, {foreignKey: 'userId'})
 WaitData.belongsTo(User, {foreignKey: 'userId'})
 
+User.hasMany(LearnResult, {foreignKey: 'userId'})
+LearnResult.belongsTo(User, {foreignKey: 'userId'})
+
+Subject.hasMany(LearnResult, {foreignKey: 'subjectId'})
+LearnResult.belongsTo(Subject, {foreignKey: 'subjectId'})
+
 sequelize.authenticate().then(async function(errors) { 
   if (errors) {
     console.log("error");
   } else {
-    
+    // add subjectId to tests and videos
+    // const courses = await Course.findAll()
+    // await Promise.all(courses.map(c => {
+    //   return Promise.all([Test.update({subjectId: c.subjectId}, {where: {courseId: c.courseId}}),
+    //     Video.update({subjectId: c.subjectId}, {where: {courseId: c.courseId}})
+    //   ])
+    // }))
+    // await LearnResult.truncate()
+    // const breakSize = 50;
+    // let turn = 0;
+    // const subjects = await Subject.findAll()
+
+    // while (true) {
+    //   const users = await User.findAll({
+    //     limit: breakSize,
+    //     offset: turn*breakSize,
+    //     where: {role: 0},
+    //     include: [
+    //       {
+    //         model: RegisCourse,
+    //         include: Course
+    //       },
+    //       {
+    //         model: Tested,
+    //         include: Test,
+    //       },
+    //       {
+    //         model: SeenVideo,
+    //         include: Video
+    //       }
+    //     ]
+    //   })
+
+    //   if (users.length <= 0) break;
+
+    //   turn++;
+
+    //   const listLearnResult = []
+    //   users.forEach(user => {
+    //     subjects.forEach(s => {
+    //       const learnResult = funcs.calculate(user, s)
+    //       learnResult && listLearnResult.push(learnResult)
+    //     })
+    //   })
+
+    //   await LearnResult.bulkCreate(listLearnResult);
+    // }
+
+    // console.log("done");
   }
 });
 
@@ -62,5 +119,6 @@ module.exports = {
   Subject,
   Question,
   RegisCourse,
-  WaitData
+  WaitData,
+  LearnResult
 }

@@ -16,6 +16,10 @@ const Test = sequelize.define('tests', {
 	description: Sequelize.STRING,
 	estimate: Sequelize.INTEGER,
 	title: Sequelize.STRING,
+	subjectId: {
+		type: Sequelize.INTEGER,
+		field: 'subject_id'
+	}
 }, {
 	timestamps: false
 })
