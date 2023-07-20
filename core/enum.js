@@ -11,7 +11,13 @@ const REGIS_TYPE = {
   // 1 -> Cung cấp khóa học
   HAS: 1,
   // 2 -> người duyệt
-  APPROVE: 2
+  APPROVE: 2,
+  // 3 -> gợi ý
+  SUGGEST: 3,
+  // 4 -> gợi ý theo người dùng
+  SUGGEST_BY_UESR: 4,
+  // 5 -> gợi ý theo môn học
+  SUGGEST_BY_SUBJECT: 5
 }
 
 const WAIT_TYPE = {

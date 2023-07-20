@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 
-const sequelize = require('../services/connect')
+const sequelize = require('../core/connect')
 
 const WaitData = sequelize.define('wait_datas', {
   waitId: {

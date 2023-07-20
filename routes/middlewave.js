@@ -1,4 +1,4 @@
-const { ROLE } = require("../services/enum")
+const { ROLE } = require("../core/enum")
 
 const checkAuth = (req, res, next) => {
   if (req.isAuthenticated()) {

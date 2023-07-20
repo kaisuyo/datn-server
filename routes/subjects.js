@@ -1,17 +1,17 @@
 var express = require('express');
 var router = express.Router();
-const {Subject} = require('../models/index');
+const SubjectManage = require('../services/AdminManage/SubjectManage');
 const { checkSuperAdmin } = require('./middlewave');
 
 router.get("/all", async (req, res) => {
-  const subjects = await Subject.findAll()
+  const subjects = await SubjectManage.getAll()
   res.json({value: subjects})
 })
 
 router.post("/create", checkSuperAdmin, async (req, res) => {
   const { title, description } = req.body
   try {
-    const newSubject = await Subject.create({title, description})
+    const newSubject = await SubjectManage.create(title, description)
     res.json({value: newSubject})
   } catch (e) {
     console.error(e)
@@ -22,7 +22,7 @@ router.post("/create", checkSuperAdmin, async (req, res) => {
 router.post("/delete", checkSuperAdmin, async (req, res) => {
   const { subjectId } = req.body
   try {
-    const deleted = await Subject.destroy({where: {subjectId}})
+    const deleted = await SubjectManage.delete(subjectId)
     res.json({value: deleted, message: "Xóa môn học thành công"})
   } catch(e) {
     console.error(e)
@@ -33,7 +33,7 @@ router.post("/delete", checkSuperAdmin, async (req, res) => {
 router.post("/edit", checkSuperAdmin, async (req, res) => {
   const { subjectId, title, description } = req.body
   try {
-    const updated = await Subject.update({title, description}, {where: {subjectId}})
+    const updated = await SubjectManage.update(subjectId, title, description)
     res.json({value: updated})
   } catch(e) {
     res.json({value: null, message: "Có lỗi khi sửa thông tin môn học"})

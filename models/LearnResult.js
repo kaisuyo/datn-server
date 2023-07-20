@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 
-const sequelize = require('../services/connect')
+const sequelize = require('../core/connect')
 
 const LearnResult = sequelize.define('learn_results', {
 	userId: {

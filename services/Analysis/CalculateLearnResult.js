@@ -92,13 +92,13 @@ const funcs = {
     }
     
     return {
-      rate: parseFloat(calculateRate(user, subject).toFixed(2)),
-      timeTest: parseFloat(calculateTimeTest(user, subject).toFixed(2)),
-      timeVideo: parseFloat(calculateTimeVideo(user, subject).toFixed(2)),
-      score: parseFloat(calculateScore(user, subject).toFixed(2)),
-      testTimes: parseFloat(calculateTestTimes(user, subject).toFixed(2)),
-      videoTimes: parseFloat(calculateVideoTimes(user, subject).toFixed(2)),
-      courseTotal: parseFloat(calculateCourseTotal(user, subject).toFixed(2)),
+      rate: parseFloat(calculateRate(user, subject).toFixed(2)) || 0,
+      timeTest: parseFloat(calculateTimeTest(user, subject).toFixed(2)) || 0,
+      timeVideo: parseFloat(calculateTimeVideo(user, subject).toFixed(2)) || 0,
+      score: parseFloat(calculateScore(user, subject).toFixed(2)) || 0,
+      testTimes: parseFloat(calculateTestTimes(user, subject).toFixed(2)) || 0,
+      videoTimes: parseFloat(calculateVideoTimes(user, subject).toFixed(2)) || 0,
+      courseTotal: parseFloat(calculateCourseTotal(user, subject).toFixed(2)) || 0,
       userId: user.userId,
       subjectId: subject.subjectId
     }

@@ -1,5 +1,5 @@
-const sequelize = require('../services/connect')
-const { bcrypt, saltRounds } = require('../services/bcrypt')
+const sequelize = require('../core/connect')
+const { bcrypt, saltRounds } = require('../core/bcrypt')
 const User = require('../models/User');
 const Video = require('../models/Video');
 const SeenVideo = require('../models/SeenVideo');
@@ -11,7 +11,6 @@ const Question = require('./Question');
 const RegisCourse = require('../models/RegisCourse');
 const WaitData = require("../models/WaitData");
 
-const funcs = require("../services/calculateLearnResult");
 const LearnResult = require('./LearnResult');
 
 User.hasMany(SeenVideo, {foreignKey: 'userId'})
@@ -106,6 +105,19 @@ sequelize.authenticate().then(async function(errors) {
     // }
 
     // console.log("done");
+    // const a = new S_SMC_FMC(dataH.map(e => ({
+    //   ...e, 
+    //   measure1: Number(e.measure1),
+    //   measure2: Number(e.measure2),
+    //   measure3: Number(e.measure3),
+    //   measure4: Number(e.measure4)
+    // })), [0, 1], 'label', ['id'])
+    // a.run().then(data => {
+    //   fs.writeFile('output.txt', JSON.stringify(data.X), (err) => {
+    //     if (err) throw err;
+    //     console.log("done");
+    //    });
+    // })
   }
 });
 
