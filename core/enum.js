@@ -1,8 +1,13 @@
 const ROLE = {
-  USER: 0,
-  SUPER_USER: 1,
-  ADMIN: 2,
-  SYSTEM_USER: 3,
+  LEARNER: 0,
+  PROVIDER: 1,
+  APPROVER: 2,
+  SYSTEM: 3,
+}
+
+const USER_STATUS = {
+  BLOCK: 0,
+  ACTIVE: 1
 }
 
 const REGIS_TYPE = {
@@ -33,4 +38,4 @@ const COURSE_STATUS = {
   ALOW: 1
 }
 
-module.exports = { ROLE, REGIS_TYPE, WAIT_TYPE, COURSE_STATUS }
+module.exports = { ROLE, REGIS_TYPE, WAIT_TYPE, COURSE_STATUS, USER_STATUS }

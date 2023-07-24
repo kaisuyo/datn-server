@@ -4,17 +4,24 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
-const passport = require('./services/auth');
+const passport = require('./core/sessionAuth');
 const cors = require('cors')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-const coursesRouter = require("./routes/courses");
-const subjectsRouter = require("./routes/subjects");
-const testsRouter = require('./routes/tests');
-const questionsRouter = require("./routes/questions")
-const videosRouter = require("./routes/videos")
-const suggestRouter = require("./routes/suggest")
+// var indexRouter = require('./routes/index');
+// var usersRouter = require('./routes/users');
+// const coursesRouter = require("./routes/courses");
+// const subjectsRouter = require("./routes/subjects");
+// const testsRouter = require('./routes/tests');
+// const questionsRouter = require("./routes/questions")
+// const videosRouter = require("./routes/videos")
+const CommonRouter = require('./routes/Common')
+const AuthRouter = require('./routes/Auth')
+const SystemRouter = require('./routes/SystemManage')
+const ProvideRouter = require('./routes/Provide')
+const ApproveRouter = require('./routes/Approve')
+const LearnRouter = require('./routes/Learn')
+const SuggestRouter = require("./routes/Suggest")
+
 
 var app = express();
 
@@ -44,14 +51,20 @@ app.use(cors({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/courses', coursesRouter);
-app.use('/subjects', subjectsRouter);
-app.use('/tests', testsRouter);
-app.use('/questions', questionsRouter)
-app.use('/videos', videosRouter);
-app.use('/suggest', suggestRouter)
+// app.use('/', indexRouter);
+// app.use('/users', usersRouter);
+// app.use('/courses', coursesRouter);
+// app.use('/subjects', subjectsRouter);
+// app.use('/tests', testsRouter);
+// app.use('/questions', questionsRouter)
+// app.use('/videos', videosRouter);
+app.use('/common', CommonRouter)
+app.use('/auth', AuthRouter)
+app.use('/system', SystemRouter)
+app.use('/provide', ProvideRouter)
+app.use('/approve', ApproveRouter)
+app.use('/learn', LearnRouter)
+app.use('/suggest', SuggestRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

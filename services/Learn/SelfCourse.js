@@ -1,0 +1,58 @@
+const { REGIS_TYPE, WAIT_TYPE, ROLE, COURSE_STATUS } = require('../../core/enum')
+const { tryCatchExe } = require('../../core/middlewave')
+const { WatchVideo, Test, RegisCourse, WaitData, Course, Subject } = require('../../models')
+
+const SelfCourse = {
+  getSelfCourses: async (user) => {
+    return await tryCatchExe(async () => {
+      const userId = user ? user.userId : -1
+      const regisCourses = await RegisCourse.findAll({
+        where: {userId, regisType: REGIS_TYPE.REGIS},
+        include: Course
+      })
+
+      const waitCoursesData  = await WaitData.findAll({
+        where: {
+          userId,
+          waitType: WAIT_TYPE.REGIS
+        }
+      })
+
+      const waitCourses = await Course.findAll({where: {
+        courseId: waitCoursesData.map(w => w.waitDataDest)
+      }})
+
+      return ({
+        value: [
+          ...(waitCourses.map(w => {
+            return {...w.dataValues, status: COURSE_STATUS.WAIT}})
+          ),
+          ...(regisCourses.map(r => {
+            let status = (r.course.status != COURSE_STATUS.ALOW && user?.role == ROLE.USER)? 
+            COURSE_STATUS.BLOCK : r.course.status
+            return {...r.course.dataValues, status}
+          }))
+        ]
+      })
+    }, "get all self course")
+  },
+
+  getCourse: async (courseId) => {
+    return await tryCatchExe(async () => {
+      const course = await Course.findOne({
+        where: {courseId}, 
+        include: [{model: Test}, {model: WatchVideo}]
+      })
+      return {value: course}
+    }, "get course for leaning")
+  },
+
+  getByIds: async (courseIds) => {
+    return await tryCatchExe(async () => {
+      const courses = await Course.findAll({where: {courseId: courseIds}, include: Subject})
+      return {value: courses}
+    }, "get course for leaning")
+  }
+}
+
+module.exports = SelfCourse

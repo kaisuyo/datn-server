@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 
 const sequelize = require('../core/connect')
 
-const SeenVideo = sequelize.define('seen_videos', {
+const WatchVideo = sequelize.define('seen_videos', {
 	userId: {
 		type: Sequelize.INTEGER,
 		field: 'user_id',
@@ -29,4 +29,4 @@ const SeenVideo = sequelize.define('seen_videos', {
 	timestamps: false
 })
 
-module.exports = SeenVideo
+module.exports = WatchVideo

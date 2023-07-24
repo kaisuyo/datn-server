@@ -2,7 +2,7 @@ const M = 2;
 const _M = 10;
 const epsilon = 0.0001
 
-class S_SMC_FCM {
+class SSmcFcm {
   X = [];
   C = [];
   m = [];
@@ -298,4 +298,5 @@ class S_SMC_FCM {
 
 }
 
-module.exports = S_SMC_FCM
+
+module.exports = SSmcFcm

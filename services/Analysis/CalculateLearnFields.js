@@ -85,7 +85,7 @@ const calculateCourseTotal = (user, subject) => {
   return courses;
 }
 
-const funcs = {
+const CalculateLearnFields = {
   calculate: (user, subject) => {
     if (user.regis_courses.length <= 0 || user.regis_courses.every(c => c.course.subjectId != subject.subjectId)) {
       return null;
@@ -105,4 +105,4 @@ const funcs = {
   }
 }
 
-module.exports = funcs
+module.exports = CalculateLearnFields

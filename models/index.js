@@ -2,7 +2,7 @@ const sequelize = require('../core/connect')
 const { bcrypt, saltRounds } = require('../core/bcrypt')
 const User = require('../models/User');
 const Video = require('../models/Video');
-const SeenVideo = require('../models/SeenVideo');
+const WatchVideo = require('./WatchVideo');
 const Test = require('../models/Test');
 const Tested = require('../models/Tested');
 const Course = require('../models/Course');
@@ -13,14 +13,14 @@ const WaitData = require("../models/WaitData");
 
 const LearnResult = require('./LearnResult');
 
-User.hasMany(SeenVideo, {foreignKey: 'userId'})
-SeenVideo.belongsTo(User, {foreignKey: 'userId'})
+User.hasMany(WatchVideo, {foreignKey: 'userId'})
+WatchVideo.belongsTo(User, {foreignKey: 'userId'})
 
 User.hasMany(Tested, {foreignKey: 'userId'})
 Tested.belongsTo(User, {foreignKey: 'userId'})
 
-Video.hasMany(SeenVideo, {foreignKey: 'videoId'})
-SeenVideo.belongsTo(Video, {foreignKey: 'videoId'})
+Video.hasMany(WatchVideo, {foreignKey: 'videoId'})
+WatchVideo.belongsTo(Video, {foreignKey: 'videoId'})
 
 Test.hasMany(Tested, {foreignKey: 'testId'})
 Tested.belongsTo(Test, {foreignKey: 'testId'})
@@ -124,7 +124,7 @@ sequelize.authenticate().then(async function(errors) {
 module.exports = {
   User, 
   Video,
-  SeenVideo,
+  WatchVideo,
   Test,
   Tested,
   Course,

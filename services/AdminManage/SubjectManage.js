@@ -1,3 +1,5 @@
+const Message = require("../../core/message")
+const { tryCatchExe } = require("../../core/middlewave")
 const { Subject } = require("../../models")
 
 const SubjectManage = {
@@ -8,12 +10,10 @@ const SubjectManage = {
    * @returns 
    */
   create: async (title, description) => {
-    try {
+    return await tryCatchExe(async () => {
       const newSubject = await Subject.create({title, description})
-    } catch(e) {
-      console.error(e)
-      return {value: null, message: }
-    }
+      return {value: newSubject, message: Message.CREATE_SUBJECT_SUCCESS}
+    }, "create subject")
   },
 
   /**
@@ -22,17 +22,10 @@ const SubjectManage = {
    * @return Subject
    */
   get: async (subjectId) => {
-    const subject = await Subject.findOne({where: {subjectId}})
-    return subject
-  },
-
-  /**
-   * 
-   * @returns Subjects
-   */
-  getAll: async () => {
-    const subjects = await Subject.findAll()
-    return subjects
+    return await tryCatchExe(async () => {
+      const subject = await Subject.findOne({where: {subjectId}})
+      return {value: subject}
+    }, "get subject")
   },
 
   /**
@@ -43,8 +36,10 @@ const SubjectManage = {
    * @returns Integer 1: updated, 0: update fail
    */
   update: async (subjectId, title, description) => {
-    const isUpdated = await Subject.update({title, description}, {where: {subjectId}})
-    return isUpdated
+    return await tryCatchExe(async () => {
+      const isUpdated = await Subject.update({title, description}, {where: {subjectId}})
+      return {value: isUpdated}
+    }, "update subject")
   },
 
   /**
@@ -53,8 +48,10 @@ const SubjectManage = {
    * @returns Integer 1: deleted, 0: update fail
    */
   delete: async (subjectId) => {
-    const deleted = await Subject.destroy({where: {subjectId}})
-    return deleted
+    return await tryCatchExe(async () => {
+      const deleted = await Subject.destroy({where: {subjectId}})
+      return deleted
+    }, "delete subject")
   }
 }
 
