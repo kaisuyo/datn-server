@@ -1,7 +1,7 @@
 const { REGIS_TYPE, WAIT_TYPE, COURSE_STATUS } = require("../../core/enum")
 const Message = require("../../core/message")
 const { tryCatchExe } = require("../../core/middlewave")
-const { Course } = require("../../models")
+const { Course, RegisCourse } = require("../../models")
 
 const CourseRegis = {
   regis: async (userId, courseId) => {

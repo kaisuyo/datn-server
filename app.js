@@ -43,8 +43,9 @@ app.use(session({
 }));
 
 app.use(cors({
-  origin: ["http://localhost:3000", ""],
-  credentials: true
+  origin: ["http://localhost:3000", "https://doan.bacnt.own.vn"],
+  credentials: true,
+  methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
 }))
 
 // Thiết lập passport
