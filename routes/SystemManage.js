@@ -3,10 +3,11 @@ const { ROLE, USER_STATUS } = require('../core/enum');
 const { checkAdmin } = require('../core/middlewave');
 const SubjectManage = require('../services/AdminManage/SubjectManage');
 const UserManage = require('../services/AdminManage/UserManage');
+const Subjects = require('../services/Common/Subjects');
 var router = express.Router();
 
 router.post("/subjects/", async (req, res) => {
-  const result = await SubjectManage.getAll()
+  const result = await Subjects.getAll()
   res.json(result)
 })
 

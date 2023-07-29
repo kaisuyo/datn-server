@@ -62,10 +62,14 @@ router.post("/tests/submit", checkAuth, async (req, res) => {
 
 router.post("/suggest", checkAuth, async (req, res) => {
   const result = await CalcFinalLearnResult.getSuggest(req.user.userId)
-  const { customSuggest, userSuggest, subjectSuggest } = result.value
-  const courseIds = [...customSuggest, ...userSuggest, ...subjectSuggest].map(x => x.key)
-  const courses = await SelfCourse.getByIds(courseIds)
-  res.json(courses)
+  if (result.value) {
+    const { customSuggest, userSuggest, subjectSuggest } = result.value
+    const courseIds = [...customSuggest, ...userSuggest, ...subjectSuggest].map(x => x.key)
+    const courses = await SelfCourse.getByIds(courseIds)
+    res.json(courses)
+  } else {
+    res.json({value: []})
+  }
 })
 
 module.exports = router;
