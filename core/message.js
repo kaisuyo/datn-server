@@ -17,6 +17,7 @@ const Message = {
   TEST_ERR: "Bài kiểm tra bị lỗi",
   COURSE_BE_REGIS: "Khóa học đã được đăng ký",
   COURSE_NOT_FOR_YOU: "Bạn chưa sở hữu khóa học này",
+  COURSE_NOT_GET_THIS_COURSE: "Khóa học đang trong quá trình chỉnh sửa",
   
   CREATE_USER_SUCCESS: "Đăng ký tài khoản thành công",
   LOGIN_SUCCESS: "Đăng nhập thành công",

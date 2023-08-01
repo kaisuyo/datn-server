@@ -49,6 +49,10 @@ const SelfCourse = {
         where: {courseId}, 
         include: [{model: Test}, {model: Video}]
       })
+
+      if (course.status != COURSE_STATUS.ALOW) {
+        return {message: Message.COURSE_NOT_GET_THIS_COURSE}
+      }
       return {value: course}
     }, "get course for leaning")
   },

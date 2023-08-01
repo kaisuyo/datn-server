@@ -26,13 +26,15 @@ router.post("/get", checkAuth, async (req, res) => {
 
 router.post("/videos", checkAuth, async (req, res) => {
   const { videoId } = req.body
-  const result = await LearnByWatchVideo.get(videoId)
+  const {userId} = req.user
+  const result = await LearnByWatchVideo.get(userId, videoId)
   res.json(result)
 })
 
 router.post("/tests", checkAuth, async (req, res) => {
   const { testId } = req.body
-  const result = await LearnByTest.get(testId)
+  const { userId } = req.user
+  const result = await LearnByTest.get(userId, testId)
   res.json(result)
 })
 
@@ -55,8 +57,8 @@ router.post("/videos/watch", checkAuth, async (req, res) => {
 })
 
 router.post("/tests/submit", checkAuth, async (req, res) => {
-  const { answers, testId, time, rate } = req.body
-  const result = await LearnByTest.submit(req.user.userId, testId, answers, time, rate)
+  const { answers, testId, time } = req.body
+  const result = await LearnByTest.submit(req.user.userId, testId, answers, time)
   res.json(result)
 })
 
@@ -71,5 +73,19 @@ router.post("/suggest", checkAuth, async (req, res) => {
     res.json({value: []})
   }
 })
+
+router.post("/rateVideo", checkAuth, async (req, res) => {
+  const { videoId, rate } = req.body
+  const { userId } = req.user
+  const result = await LearnByWatchVideo.rate(userId, videoId, rate);
+  res.json(result)
+}) 
+
+router.post("/rateTest", checkAuth, async (req, res) => {
+  const { testId, rate } = req.body
+  const { userId } = req.user
+  const result = await LearnByTest.rate(userId, testId, rate);
+  res.json(result)
+}) 
 
 module.exports = router;

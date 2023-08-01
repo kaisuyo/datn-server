@@ -50,14 +50,14 @@ router.post("/courses/delete", checkProvider, async (req, res) => {
 })
 
 router.post("/videos/create", checkProvider, async (req, res) => {
-  const { courseId, url, title, description, time, subjectId } = req.body
-  const result = await VideoManage.create(title, description, url, time, courseId, subjectId)
+  const { courseId, url, title, description, time } = req.body
+  const result = await VideoManage.create(title, description, url, time, courseId)
   res.json(result)
 })
 
 router.post("/tests/create", checkProvider, async (req, res) => {
-  const { courseId, title, description, estimate, subjectId } = req.body
-  const result = await TestManage.createTest(courseId, subjectId, title, description, estimate)
+  const { courseId, title, description, estimate } = req.body
+  const result = await TestManage.createTest(courseId, title, description, estimate)
   res.json(result)
 })
 

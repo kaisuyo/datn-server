@@ -1,10 +1,11 @@
 const { tryCatchExe } = require("../../core/middlewave")
-const { Video } = require("../../models")
+const { Video, Course } = require("../../models")
 
 const VideoManage = {
-  create: async (title, description, url, time, courseId, subjectId) => {
+  create: async (title, description, url, time, courseId) => {
     return await tryCatchExe(async () => {
-      const newVideo = await Video.create({title, description, URL: url, time, courseId, subjectId})
+      const course = await Course.findOne({where: {courseId}})
+      const newVideo = await Video.create({title, description, URL: url, time, courseId, subjectId: course.subjectId})
       return {value: newVideo}
     }, "create video")
   },

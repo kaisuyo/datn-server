@@ -6,18 +6,19 @@ const LearnByTest = {
   getQuestions: async (testId) => {
     return await tryCatchExe(async () => {
       const questions = await Question.findAll({where: {testId}})
-      return {value: questions}
+      return {value: questions.map(q => ({...q, answer: undefined}))}
     }, "get questions of test")
   },
 
-  get: async (testId) => {
+  get: async (userId, testId) => {
     return await tryCatchExe(async () => {
       const test = await Test.findOne({where: {testId}})
-      return {value: test}
+      const tested = await Tested.findOne({where: {testId, userId}})
+      return {value: {...test.dataValues, rate: tested?.rate}}
     }, "get data of test")
   },
 
-  submit: async (userId, testId, answers, time, rate) => {
+  submit: async (userId, testId, answers, time) => {
     return await tryCatchExe(async () => {
       const test = await Test.findOne({where: {testId}, include: Question})
       if (test) {
@@ -37,14 +38,14 @@ const LearnByTest = {
         if (tested) {
           testedInfo = await Tested.update({
             score: (tested.score*tested.fraq + score)/(tested.fraq+1),
-            time: tested.time + time,
+            time: (tested.time*tested.fraq + time)/(tested.fraq+1),
             fraq: tested.fraq+1,
           }, {where: {testId, userId}})
         } else {
-          testedInfo = await Tested.create({testId, userId: req.user.userId, score, time, rate, fraq: 1})
+          testedInfo = await Tested.create({testId, userId, score, time, fraq: 1})
         }
 
-        return ({value: testedInfo})
+        return ({value: score})
       } else {
         return ({message: Message.TEST_ERR})
       }
@@ -54,8 +55,15 @@ const LearnByTest = {
   getMaxScore: async (userId, testId) => {
     return await tryCatchExe(async () => {
       const tested = await Tested.findOne({where: {testId, userId}})
-      return ({value: tested})
-    }, "get max score of test of user")
+      return ({value: tested?.score})
+    }, "get score of test of user")
+  },
+
+  rate: async (userId, testId, rate) => {
+    return await tryCatchExe(async () => {
+      await Tested.update({rate}, {where: {userId, testId}})
+      return {value: true}
+    }, "ratting for test")
   }
 }
 
