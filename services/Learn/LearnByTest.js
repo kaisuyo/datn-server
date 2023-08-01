@@ -10,6 +10,13 @@ const LearnByTest = {
     }, "get questions of test")
   },
 
+  get: async (testId) => {
+    return await tryCatchExe(async () => {
+      const test = await Test.findOne({where: {testId}})
+      return {value: test}
+    }, "get data of test")
+  },
+
   submit: async (userId, testId, answers, time, rate) => {
     return await tryCatchExe(async () => {
       const test = await Test.findOne({where: {testId}, include: Question})

@@ -8,8 +8,8 @@ const SelfCourse = require('../services/Learn/SelfCourse');
 var router = express.Router();
 
 router.post("/courses/regis", checkAuth, async (req, res) => {
-  const { userId, courseId } = req.body
-  const result = await CourseRegis.regis(userId, courseId)
+  const { courseId } = req.body
+  const result = await CourseRegis.regis(req.user.userId, courseId)
   res.json(result)
 })
 
@@ -20,7 +20,7 @@ router.post("/self", checkAuth, async (req, res) => {
 
 router.post("/get", checkAuth, async (req, res) => {
   const {courseId} = req.body
-  const result = await SelfCourse.getCourse(courseId)
+  const result = await SelfCourse.getCourse(req.user.userId, courseId)
   res.json(result)
 })
 

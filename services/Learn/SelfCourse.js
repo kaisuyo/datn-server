@@ -1,6 +1,7 @@
 const { REGIS_TYPE, WAIT_TYPE, ROLE, COURSE_STATUS } = require('../../core/enum')
+const Message = require('../../core/message')
 const { tryCatchExe } = require('../../core/middlewave')
-const { WatchVideo, Test, RegisCourse, WaitData, Course, Subject } = require('../../models')
+const { Test, RegisCourse, WaitData, Course, Subject, Video } = require('../../models')
 
 const SelfCourse = {
   getSelfCourses: async (user) => {
@@ -37,11 +38,16 @@ const SelfCourse = {
     }, "get all self course")
   },
 
-  getCourse: async (courseId) => {
+  getCourse: async (userId, courseId) => {
     return await tryCatchExe(async () => {
+      const regis = await RegisCourse.findOne({where: {userId, courseId, regisType: REGIS_TYPE.REGIS}})
+      if (!regis) {
+        return {message: Message.COURSE_NOT_FOR_YOU}
+      }
+
       const course = await Course.findOne({
         where: {courseId}, 
-        include: [{model: Test}, {model: WatchVideo}]
+        include: [{model: Test}, {model: Video}]
       })
       return {value: course}
     }, "get course for leaning")

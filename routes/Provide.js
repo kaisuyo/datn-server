@@ -21,7 +21,7 @@ router.post("/courses/get", checkProvider, async (req, res) => {
 
 router.post("/courses/create", checkProvider, async (req, res) => {
   const { title, description, subjectId } = req.body
-  const result = await CourseProvide.create(title, description, subjectId)
+  const result = await CourseProvide.create(title, description, subjectId, req.user.userId)
   res.json(result)
 })
 

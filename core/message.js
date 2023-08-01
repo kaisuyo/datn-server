@@ -16,6 +16,7 @@ const Message = {
   CANNOT_TAKE_FOR_APPROVE: "Không thể phê duyệt cho khóa học này",
   TEST_ERR: "Bài kiểm tra bị lỗi",
   COURSE_BE_REGIS: "Khóa học đã được đăng ký",
+  COURSE_NOT_FOR_YOU: "Bạn chưa sở hữu khóa học này",
   
   CREATE_USER_SUCCESS: "Đăng ký tài khoản thành công",
   LOGIN_SUCCESS: "Đăng nhập thành công",
@@ -24,6 +25,8 @@ const Message = {
   SEND_REQUEST_REGIS_COURSE: "Đã gửi yêu cầu đăng ký khóa học",
   SEND_REQUEST_APPROVE_COURSE: "Đã gửi yêu cầu kiểm duyệt khóa học",
   UPDATE_COURSE_SUCCESS: "Thay đổi thông tin khóa học thành công",
+
+  GET_FOR_APPROVE_SUCCESS: "Lấy khóa học thành công",
 
 }
 

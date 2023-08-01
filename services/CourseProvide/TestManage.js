@@ -1,10 +1,11 @@
 const { tryCatchExe } = require("../../core/middlewave")
-const { Test } = require("../../models")
+const { Test, Course } = require("../../models")
 
 const TestManage = {
   createTest: async (courseId, subjectId, title, description, estimate) => {
     return await tryCatchExe(async () => {
-      const test = await Test.create({title, description, subjectId, estimate}, {where: {courseId}})
+      const course = await Course.findOne({where: courseId})
+      const test = await Test.create({title, description, subjectId, estimate, courseId, subjectId: course.subjectId})
       return {value: test}
     }, "create test")
   },

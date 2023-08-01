@@ -1,13 +1,16 @@
 const { tryCatchExe } = require("../../core/middlewave")
-const { Course, RegisCourse, Test, Video } = require("../../models")
+const { Course, RegisCourse, Test, Video, WaitData } = require("../../models")
 const { COURSE_STATUS, REGIS_TYPE, WAIT_TYPE } = require("../../core/enum")
 const Message = require("../../core/message")
+const { Op } = require("sequelize")
 
 const CourseApprove = {
   getWaitingApprove: async () => {
     return await tryCatchExe(async () => {
       const courses = await Course.findAll({where: {status: COURSE_STATUS.WAIT}})
-      return {value: courses}
+      const regis = await RegisCourse.findAll({where: {courseId: courses.map(c => c.courseId), regisType: REGIS_TYPE.APPROVE}})
+      
+      return {value: courses.filter(c => !(regis.map(r => r.courseId).includes(c.courseId)))}
     }, "get all course waiting for approve")
   },
 
@@ -27,13 +30,13 @@ const CourseApprove = {
 
   takeForApprove: async (userId, courseId) => {
     return await tryCatchExe(async () => {
-      const isTake = await RegisCourse.findOne({courseId, regisType: REGIS_TYPE.APPROVE})
+      const isTake = await RegisCourse.findOne({where: {courseId, regisType: REGIS_TYPE.APPROVE}})
       if (isTake) {
         return {message: Message.CANNOT_TAKE_FOR_APPROVE}
       }
 
       const regis = await RegisCourse.create({courseId, userId, regisType: REGIS_TYPE.APPROVE})
-      return {value: regis}
+      return {value: regis, message: Message.GET_FOR_APPROVE_SUCCESS}
     }, "take a course for approve")
   },
 

@@ -4,7 +4,7 @@ const { tryCatchExe } = require("../../core/middlewave")
 const { Course, RegisCourse, Test, Video } = require("../../models")
 
 const CourseProvide = {
-  create: async (title, description, subjectId) => {
+  create: async (title, description, subjectId, userId) => {
     return await tryCatchExe(async () => {
       const course = await Course.create({title, description, subjectId})
       await RegisCourse.create({userId, courseId: course.courseId, regisType: REGIS_TYPE.HAS})
@@ -14,7 +14,7 @@ const CourseProvide = {
 
   deleteCourse: async (userId, courseId) => {
     return await tryCatchExe(async () => {
-      const regisCourse = await RegisCourse.findOne({where: {courseId, userId, type: REGIS_TYPE.HAS}})
+      const regisCourse = await RegisCourse.findOne({where: {courseId, userId, regisType: REGIS_TYPE.HAS}})
       if (regisCourse) {
         const isDeleted = await Course.destroy({where: {courseId}})
         return {value: isDeleted}
@@ -26,7 +26,7 @@ const CourseProvide = {
 
   updateCourse: async (userId, courseId, title, description) => {
     return await tryCatchExe(async () => {
-      const regis = RegisCourse.findOne({where: {courseId, userId, type: REGIS_TYPE.HAS}})
+      const regis = RegisCourse.findOne({where: {courseId, userId, regisType: REGIS_TYPE.HAS}})
       
       if (regis) {
         const course = await Course.findOne({where: {courseId, status: COURSE_STATUS.N0}})
@@ -42,12 +42,12 @@ const CourseProvide = {
 
   requestApprove: async (userId, courseId) => {
     return await tryCatchExe(async () => {
-      const regis = RegisCourse.findOne({where: {courseId, userId, type: REGIS_TYPE.HAS}})
+      const regis = await RegisCourse.findOne({where: {courseId, userId, regisType: REGIS_TYPE.HAS}})
       
       if (regis) {
         const course = await Course.findOne({where: {courseId, status: COURSE_STATUS.N0}})
         if (course) {
-          const newCourse = await Course.update({status: COURSE_STATUS.WAIT}, {where: {courseId}})
+          await Course.update({status: COURSE_STATUS.WAIT}, {where: {courseId}})
           return ({value: courseId, message: Message.UPDATE_COURSE_SUCCESS})
         }
       }

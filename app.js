@@ -52,13 +52,6 @@ app.use(cors({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
-// app.use('/courses', coursesRouter);
-// app.use('/subjects', subjectsRouter);
-// app.use('/tests', testsRouter);
-// app.use('/questions', questionsRouter)
-// app.use('/videos', videosRouter);
 app.use('/common', CommonRouter)
 app.use('/auth', AuthRouter)
 app.use('/system', SystemRouter)

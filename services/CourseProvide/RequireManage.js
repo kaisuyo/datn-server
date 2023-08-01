@@ -1,4 +1,4 @@
-const { ROLE, REGIS_TYPE } = require("../../core/enum")
+const { ROLE, REGIS_TYPE, WAIT_TYPE } = require("../../core/enum")
 const { tryCatchExe } = require("../../core/middlewave")
 const { User, WaitData, RegisCourse } = require("../../models")
 
@@ -37,7 +37,7 @@ const RequireManage = {
           await WaitData.destroy({where: {waitId}})
           return ({value: true})
         } else {
-          return ({message: "Việc làm này chỉ mang tính hình thức"})
+          return ({message: "Bạn bắt buộc phải sửa"})
         }
       }
     }, "block a regis require")
@@ -53,7 +53,7 @@ const RequireManage = {
           return ({value: true})
         } else {
           await WaitData.destroy({where: {waitId}})
-          return ({message: "Việc làm này chỉ mang tính hình thức"})
+          return ({message: "Bạn bắt buộc phải sửa"})
         }
       } else {
         return ({message: "Yêu cầu này không tồn tại nữa"})

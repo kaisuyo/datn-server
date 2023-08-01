@@ -23,7 +23,7 @@ router.post("/login", passport.authenticate('local'), (req, res) => {
 router.post("/signUp", async (req, res) => {
   const { username, password } = req.body
   await BaseUser.create(username, password, ROLE.LEARNER)
-  res.redirect(307, '/users/login')
+  res.redirect(307, '/auth/login')
 })
 
 router.post('/changePass', checkAuth, async (req, res) => {

@@ -7,7 +7,9 @@ const QuestionManage = {
       const question = await Question.create({
         testId, title, description, optionA, optionB, optionC, optionD, answer
       })
-      return {value: question}
+
+      const questions = await Question.findAll({where: {testId}})
+      return {value: questions}
     }, "create a question for test")
   },
 
