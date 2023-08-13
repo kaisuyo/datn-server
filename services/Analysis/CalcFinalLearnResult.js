@@ -82,6 +82,9 @@ const CalcFinalLearnResult = {
   clustering: async () => {
     return await tryCatchExe(async () => {
     const learnResult = await LearnResult.findAll()
+    if (learnResult.every(e => e.label)) {
+      return {value: true}
+    }
     const s_smc_fcm = new S_SMC_FCM(learnResult.map(l => ({...l.dataValues, rate: l.dataValues.rate * 2})), ['NONE', 'LOW', 'MEDIUM', 'HIGH'], 'label', ['userId', 'subjectId'])
     const result = await s_smc_fcm.run()
     await Promise.all(result.X.map(x => {
@@ -216,7 +219,7 @@ const CalcFinalLearnResult = {
   
       return {value: {
         customSuggest: customSuggest.map(c => ({label: c.course.title, key: c.courseId})), 
-        userSuggest: userSuggest.map(c => ({label: c.title, key: c.courseId, tooltip: `${nearest.username} (độ sai khác: ${nearest.d})`})), 
+        userSuggest: userSuggest.map(c => ({label: c.title, key: c.courseId, tooltip: `${nearest.username} - ${nearest.userId} (độ sai khác: ${nearest.d})`})), 
         subjectSuggest: subjectSuggest.map(c => ({label: c.title, key: c.courseId, tooltip: c.dataValues.subject.title})), 
         all: all.filter(c => !allRegis.map(r => r.dataValues.courseId).includes(c.courseId)).map(c => ({label: c.title, key: c.courseId}))
       }}

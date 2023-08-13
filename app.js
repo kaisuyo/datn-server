@@ -35,15 +35,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.set("trust proxy", 1)
+
 // Thiết lập middleware cho session
 app.use(session({
   secret: 'your-secret-key',
-  resave: false,
-  saveUninitialized: false
+  resave: true,
+  saveUninitialized: true
 }));
 
 app.use(cors({
-  origin: ["http://localhost:3000", "https://doan.bacnt.own.vn"],
+  // origin: ["http://localhost:3000", "https://doan.bacnt.own.vn"],
+  origin: true,
   credentials: true,
   methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
 }))

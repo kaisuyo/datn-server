@@ -4,7 +4,7 @@ const { Test, Course } = require("../../models")
 const TestManage = {
   createTest: async (courseId, title, description, estimate) => {
     return await tryCatchExe(async () => {
-      const course = await Course.findOne({where: courseId})
+      const course = await Course.findOne({where: {courseId}})
       const test = await Test.create({title, description, estimate, courseId, subjectId: course.subjectId})
       return {value: test}
     }, "create test")
